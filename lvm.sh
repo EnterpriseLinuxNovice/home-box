@@ -1,15 +1,21 @@
 #!/bin/bash
+
 #Author: Joey 
 #Date: 1/16/2024
+
+
+
 #Verify Root Privileges
+
 if [ "$EUID" -ne 0 ]; then
-	echo "You must be ROOT in order to execute this script."
+	echo "You must ROOT in order to execute this script."
 	exit 1
 fi
+	
 #Prompt
 echo "#######################################################################################"
 echo "Welcome to the LVM Configuration Tool."
-echo "This LVM tool allows admins to more efficiently set up LVM on Red Hat-based machines."
+echo "This LVM tool allows admin to more efficiently set up LVM on Red Hat-based machines."
 echo "#######################################################################################"
 #Question
 echo "This tool will make major configuration changhes to system critical files, such as /etc/fstab, therefore if you are unfamilar with configuring LVM, you should abort now." 
@@ -29,11 +35,11 @@ if [ "$answer" == "Yes" ]; then
 #	echo "Review Information:"
 #	echo "######################"
 #	echo "Physical Volume = $pv_name"
-#       echo "Volume Group = $vg_name"
-#       echo "Logical Volume $lv_name"
+#        echo "Volume Group = $vg_name"
+#        echo "Logical Volume $lv_name"
 #	echo "Logical Volume size (GB) = $lv_size"
-#       echo "Mount Point = $mount"
-#       echo  "Filesystem type = $fs_type"
+#        echo "Mount Point = $mount"
+#        echo  "Filesystem type = $fs_type"
 #	echo "######################"
 #	read -sn1 -p "Click any key to continue."
 #Mountpoint
