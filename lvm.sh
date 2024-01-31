@@ -1,17 +1,11 @@
 #!/bin/bash
-
 #Author: Joey 
 #Date: 1/16/2024
-
-
-
 #Verify Root Privileges
-
 if [ "$EUID" -ne 0 ]; then
 	echo "You must ROOT in order to execute this script."
 	exit 1
 fi
-	
 #Prompt
 echo "#######################################################################################"
 echo "Welcome to the LVM Configuration Tool."
