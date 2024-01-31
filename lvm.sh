@@ -3,13 +3,13 @@
 #Date: 1/16/2024
 #Verify Root Privileges
 if [ "$EUID" -ne 0 ]; then
-	echo "You must ROOT in order to execute this script."
+	echo "You must be ROOT in order to execute this script."
 	exit 1
 fi
 #Prompt
 echo "#######################################################################################"
 echo "Welcome to the LVM Configuration Tool."
-echo "This LVM tool allows admin to more efficiently set up LVM on Red Hat-based machines."
+echo "This LVM tool allows admins to more efficiently set up LVM on Red Hat-based machines."
 echo "#######################################################################################"
 #Question
 echo "This tool will make major configuration changhes to system critical files, such as /etc/fstab, therefore if you are unfamilar with configuring LVM, you should abort now." 
