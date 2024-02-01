@@ -1,7 +1,5 @@
 #!/bin/bash
-
 fin=0
-
 #banner
 echo "###########################################################################################################################################"
 echo "Welcome to the user management tool. This tool is used for managing user accounts to include Adding, Deleting, & Modifying user settings."
