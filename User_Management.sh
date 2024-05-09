@@ -19,7 +19,8 @@ echo "========================================="
 echo
 read options;
 case $options in
-	1) read -p "Are you sure you want to continue with adding user? (yes/no): " add_user
+	1)
+		read -p "Are you sure you want to continue with adding user? (yes/no): " add_user
 		if [ "$add_user" == "yes" ]; then
 			read -p "Enter username: " add_name
 			if grep $add_name /etc/passwd; then
@@ -33,12 +34,13 @@ case $options in
 		else
 			echo "An error has occured. Please input a valid entry."
 		fi;;
-	2) read -p "Are you sure you want to continue with deleting user? (yes/no): " del_user
+	2)
+		read -p "Are you sure you want to continue with deleting user? (yes/no): " del_user
 		if [ "$del_user" == "yes" ]; then
                         read -p "Enter username: " del_name
                         if grep $del_name /etc/passwd; then
                                 echo "User $del_name has was found. Will now delete user from registry."
-				sleep 4
+				sleep 2
 				sudo userdel -r $del_name && echo "User $del_name has been removed from registry."
                         else
                                 echo "User $del_name does not exist in registry. Re-check spelling and try again."
@@ -49,6 +51,21 @@ case $options in
                 else
                         echo "An error has occured. Please input a valid entry."
                 fi;;
+	3)
+		read -p "Are you sure you want to update user password? (yes/no): " passwd
+		if [ "$passwd" == "yes" ]; then
+			read -p "Enter the desired username: " username
+			while true do;
+				read -p -s "Enter the new password: " password1
+				read -p -s "Re-Ener password: " password2
+				if [ "$password1" == "$password2" ]; then
+					echo "Password Changed Successfully."
+				else
+					echo "Password change UNSUCCESSFUL!"
+				fi
+			done
+		else
+			
 	0) echo "Now exiting script!"
 	   sleep 6 && fin=1 ;;
 esac
