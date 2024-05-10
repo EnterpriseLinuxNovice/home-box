@@ -8,7 +8,8 @@ if [ "$EUID" -ne 0 ]; then
 fi
 #Prompt
 echo "#######################################################################################"
-echo "Welcome to the LVM Configuration Tool."
+echo "Welcome to the" 
+figlet "LVM Configuration Tool."
 echo "This LVM tool allows admins to more efficiently set up LVM on Red Hat-based machines."
 echo "#######################################################################################"
 #Question
@@ -16,7 +17,7 @@ echo "This tool will make major configuration changes to system critical files, 
 read -p "Do you wish to continue? (Yes/No): " answer
 if [ "$answer" == "Yes" ]; then
 	echo "#############"
-	echo "LVM Editor"
+	figlet "LVM Editor"
 	echo "#############"
 	echo 
 	read -p "Enter Physical Volume name (i.e., /dev/sdX): " pv_name
