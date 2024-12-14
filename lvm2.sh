@@ -1,9 +1,9 @@
-oot Privileges
+#!/usr/bin/env bash
+#Root Privileges
 if [ "$EUID" -ne 0 ]; then
 	    echo "You must be ROOT in order to execute this script."
 	        exit 1
 fi
-
 # ASCII Banner
 cat << "EOF"
 ###################################################
