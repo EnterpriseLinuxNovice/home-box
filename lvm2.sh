@@ -30,6 +30,32 @@ cat << "EOF"
 ###################################################
 EOF
 
+verify_lvm_components() {
+	# Check if PV exists
+	if ! pvs --noheadings -o pv_name | grep -qw "$pv_name"; then
+		echo "Physical Volume '$pv_name' does not exist."
+		return
+	else
+		echo "Physical volume '$pv_name' exists."
+	fi
+
+	# Check if VG exists
+	if ! vgs --noheadings -o vg_name | grep -qw "$vg_name"; then
+	        echo "Volume Group '$vg_name' does not exist!"
+	        return
+	else
+		echo "Volume Group '$vg_name' exists."
+	fi
+
+	# Check if LV exists
+	if ! lvs --noheadings -o lv_name | grep -qw "$lv_name"; then
+		echo "Logical Volume $lv_name does not exist!"
+		return
+	else
+		echo echo "Logical Volume '$lv_name' exists."
+	fi
+}
+
 create_mountpoint() {
 	clear
 	read -p "Enter Physical Volume name (e.g., /dev/sdX): " pv_name
@@ -38,21 +64,25 @@ create_mountpoint() {
 	read -p "Enter Logical Volume size (GB): " lv_size
 	read -p "Enter Mount Point (e.g., /data): " mount
 	read -p "Enter filesystem type (ext4/xfs): " fs_type
-    # Check if PV exists
-	if pvs --noheadings -o pv_name | grep -qw "$pv_name"; then
-		echo "Physical Volume already EXISTS!"
-		return 1
-	fi
-    # Check if VG exists
-    	if vgs --noheadings -o vg_name | grep -qw "$vg_name"; then
-        	echo "Volume Group already EXISTS!"
-        	return 1
-    	fi
-    # Check if LV exists
-    	if lvs --noheadings -o lv_name | grep -qw "$lv_name"; then
-        	echo "Logical Volume already EXISTS!"
-        	return 1
-    	fi
+	lvm_inputs=(
+		"Physical Volume = $pv_name"
+		"Volume Group = $vg_name"
+		"Logical Volume = $lv_name"
+		"Logical Volume Size (GB) = $lv_size"
+		"Mount Point = $mount"
+		"Filesystem Type = $fs_type"
+	)
+    # Display user input
+    	echo -e "\nPlease review the entered information:"
+	for input in "${lvm_inputs[@]}"; do
+		echo "- $input"
+	done
+    # Wait for user confirmation
+    	echo
+	read -n 1 -s -r -p "Press any key to continue, or Ctrl+C to exit..."
+	echo -e "\nContinuing with set up..."
+    # Verify lvm inputs already exist
+	verify_lvm_components
     # Create PV
     	pvcreate "$pv_name" &>/dev/null || { echo "Failed to create Physical Volume."; return 1; }
     # Create VG
@@ -66,7 +96,7 @@ create_mountpoint() {
         	mkfs.xfs "/dev/$vg_name/$lv_name" &>/dev/null || { echo "Failed to format with XFS."; return 1; }
     	else
         	echo "Error: Filesystem MUST be either XFS or EXT4!"
-        	return 1
+        	return
     	fi
     # Create mountpoint if it doesn't exist
     	if [[ ! -d "$mount" ]]; then
@@ -80,19 +110,19 @@ create_mountpoint() {
 }
 
 expand_mountpoint() {
-    echo "Feature not yet implemented."
+	echo "Feature not yet implemented."
 }
 
 decrease_mountpoint() {
-    echo "Feature not yet implemented."
+	echo "Feature not yet implemented."
 }
 
 delete_mountpoint() {
-    echo "Feature not yet implemented."
+	echo "Feature not yet implemented."
 }
 
 main_menu() {
-    while true; do
+    	while true; do
         echo "Please select a configuration option below:"
         echo "1. Create a new logical Volume."
         echo "2. Expand an existing logical volume."
@@ -123,11 +153,14 @@ main_menu() {
                 echo "Invalid Option. Please select a valid option."
                 ;;
         esac
-    done
+        done
 }
 
 # Entrance Prompt
-echo "This tool will make major configuration changes to critical system files, such as /etc/fstab. If you are unfamiliar with configuring LVM, abort now."
+echo ""
+echo "This tool will make major configuration changes to critical system files, "
+echo "such as /etc/fstab. If you are unfamiliar with configuring LVM, abort now."
+echo ""
 read -p "Do you wish to continue? [Yes/No]: " answer
 clear
 case "${answer,,}" in
@@ -137,11 +170,11 @@ case "${answer,,}" in
         ;;
     no | n)
         echo "Aborting process."
-        exit 1
+        exit
         ;;
     *)
         echo "Invalid Input. Respond with 'Yes' or 'No'."
-        exit 1
+        exit
         ;;
 esac
 
