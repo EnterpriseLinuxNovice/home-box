@@ -150,6 +150,7 @@ main_menu() {
                 exit 0
                 ;;
             *)
+		clear
                 echo "Invalid Option. Please select a valid option."
                 ;;
         esac
