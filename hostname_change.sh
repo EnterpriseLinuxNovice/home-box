@@ -55,7 +55,7 @@ prompt_two() {
 }
 
 backup_file() {
-	cp /etc/hosts /etc/hosts.bak_$time_stamp
+	cp -p /etc/hosts /etc/hosts.bak_$time_stamp
 	echo "Backup of /etc/hosts created as /etc/hosts.bak"
 }
 
