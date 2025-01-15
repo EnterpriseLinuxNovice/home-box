@@ -10,7 +10,7 @@ check() {
 }
 prompt() {
 	read -p "Do you wish to cleanse your system of any BULLSHIT? [y/n] " answer
-#	answer=$(echo $answer | tr '[:upper:]' '[:lower:]')
+	answer=$(echo $answer | tr '[:upper:]' '[:lower:]')
 	if [[ "$answer" == "n" ]]; then
 		echo "Too bad we cleaning shit!"; sleep 1
 		remove_nano $package
