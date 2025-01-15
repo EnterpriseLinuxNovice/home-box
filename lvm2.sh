@@ -4,6 +4,9 @@ if [ "$EUID" -ne 0 ]; then
 	    echo "You must be ROOT in order to execute this script."
 	        exit 1
 fi
+
+# Variables
+lv_list=$(df -h | grep -vE "(tmpfs|devtmpfs|Filesystem)" | awk '{print $1}')
 # ASCII Banner
 cat << "EOF"
 ###################################################
@@ -110,15 +113,13 @@ create_mountpoint() {
 }
 
 expand_mountpoint() {
-	echo "Feature not yet implemented."
-}
-
-decrease_mountpoint() {
-	echo "Feature not yet implemented."
-}
-
-delete_mountpoint() {
-	echo "Feature not yet implemented."
+	echo "============================"
+	echo "$lv_list"
+	echo "============================"
+	read -p "Copy or type in the Logical Volume listed above (i.e., /dev/mapper/rootvg-root): " lv_select
+	read -p "Enter increase amount (i.e., 15GB) :" increase_amount
+	lvextend -r -L "$increase_amount"GB "$lv_select" &&
+	echo "df -h | grep -i $lv_select"
 }
 
 main_menu() {
@@ -126,9 +127,7 @@ main_menu() {
         echo "Please select a configuration option below:"
         echo "1. Create a new logical Volume."
         echo "2. Expand an existing logical volume."
-        echo "3. Decrease an existing logical volume."
-        echo "4. Delete a logical volume."
-        echo "5. Exit."
+        echo "3. Exit."
 
         read -p "Enter your choice: " menu_choice
 
@@ -140,12 +139,6 @@ main_menu() {
                 expand_mountpoint
                 ;;
             3)
-                decrease_mountpoint
-                ;;
-            4)
-                delete_mountpoint
-                ;;
-            5)
                 echo "Exiting program."
                 exit 0
                 ;;
