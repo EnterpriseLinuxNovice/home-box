@@ -78,10 +78,22 @@ add_account() {
 			return
 		else
 			lgroupadd -M "user_add" "grou_add" &>/dev/null
-			echo "User added succusfully!"
+			echo "User added succesfully!"
 			return
 		fi
 	fi	
 }
 
+remove_account() {
+	read -p "Enter the username you wish to REMOVE: " user_del
+	if ! getent passwd "$user_del" &>/dev/null; then
+		echo "User doesn't exist in system."
+		return
+	else
+		lgroupmod -m "$user_del" "$group_add" &>/dev/null
+		echo "User $user_del has been REMOVED from group."
+		grpconv
+		exit
+	fi
+}
 prompt1
