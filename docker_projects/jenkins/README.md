@@ -8,17 +8,16 @@ scripts makes the project more portable.
 
 Folder Structure
 ====================================
-
+```text
 docker_project/
-   |
    |
    |___ jenkins/
 	   |
 	   |
 	   |___ Dockerfile.jenkins
 	   |
-	   |___ build.sh
+	   |___ build.sh	# Builds Docker image
 	   |
-	   |___ run.sh
+	   |___ run.sh		# Starts jenkins container with runtime setup
 	   |
-	   |___ cleanup.sh 
+	   |___ cleanup.sh 	
