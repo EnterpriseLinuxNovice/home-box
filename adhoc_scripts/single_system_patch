@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+# ----------------------------------------------------------
+# Script Name: pre-patch
+# Description: gather facts for managed RHEL systems prior to patching
+# Author: Joey
+# ----------------------------------------------------------
+set -eou pipefail
+
+OS_TYPE=$(cat /etc/os-release | grep "^NAME" | awk -F'=' '{print $2}' | sed 's/"//g')
+RHEL_VERSION=$(awk '{print $6}' /etc/redhat-release | cut -d. -f1)
+hostnames=$(hostname)
+date=$(date '+%F_%H%M%S')
+pre_patch_folder="/changeme/pre_patch"
+post_patch_folder="/changeme/post_patch"
+ootpa_pre_subdir="$pre_patch_folder/rhel8"
+plow_pre_subdir="$pre_patch_folder/rhel9"
+ootpa_post_subdir="$post_patch_folder/rhel8"
+plow_post_subdir="$post_patch_folder/rhel9"
+ootpa_pre_patch_log="$ootpa_pre_subdir/log"
+ootpa_post_patch_log="$ootpa_post_subdir/log"
+plow_pre_patch_log="$plow_pre_subdir/log"
+plow_post_patch_log="$plow_post_subdir/log"
+
+# Set all folders in array for ease of creation
+all_folder=(
+    "$pre_patch_folder"
+    "$post_patch_folder"
+    "$ootpa_pre_subdir"
+    "$plow_pre_subdir"
+    "$ootpa_post_subdir"
+    "$plow_post_subdir"
+    "$ootpa_pre_patch_log"
+    "$ootpa_post_patch_log"
+    "$plow_pre_patch_log"
+    "$plow_post_patch_log"
+)
+
+verify_rhel() {
+    if [[ "$OS_TYPE" != "Red Hat Enterprise Linux" ]]; then
+        echo "System is NOT Red Hat. Aborting."
+        exit 1
+    fi
+}
+
+verify_rhel_version() {
+    if [[ "$RHEL_VERSION" != "8" ]] && [[ "$RHEL_VERSION" != "9" ]]; then
+        echo "Version is neither RHEL 8 nor RHEL 9. Aborting"
+        exit 1
+    fi
+}
+
+# Set Patch Folders
+check_folders() {
+    for folder in "${all_folder[@]}"; do
+        if [[ ! -d "$folder" ]]; then
+            mkdir -p "$folder" >/dev/null 2>&1
+        fi
+    done
+}
+
+check_update() {
+    local rhel8_pre_patch_report=$ootpa_pre_patch_log/pre_patch_report_"$hostnames"_$date.log
+    local rhel9_pre_patch_report=$plow_pre_patch_log/pre_patch_report_"$hostnames"_$date.log   
+    case "$RHEL_VERSION" in
+        8)
+            yum check-update | tee -a "$rhel8_pre_patch_report" >/dev/null
+            ;;
+        9)
+            yum check-update | tee -a "$rhel9_pre_patch_report" >/dev/null 
+            ;;
+        *)
+            echo "Server is not 8 or 9. Only 8 and 9 are supported."
+            ;;
+    esac
+}
+
+run_update() {
+    local rhel8_post_patch_report=$ootpa_post_patch_log/post_patch_report_"$hostnames"_$date.log
+    local rhel9_post_patch_report=$plow_post_patch_log/post_patch_report_"$hostnames"_$date.log    
+    case "$RHEL_VERSION" in
+        8)
+            sudo yum update -y --disablerepo="*" --enablerepo="rhel-9-for-x86_64-baseos-rpms" --enablerepo="rhel-9-for-x86_64-appstream-rpms" | tee -a "$rhel8_post_patch_report" >/dev/null
+
+            ;;
+        9)
+            sudo yum update -y --disablerepo="*" --enablerepo="rhel-9-for-x86_64-baseos-rpms" --enablerepo="rhel-9-for-x86_64-appstream-rpms" | tee -a "$rhel9_post_patch_report" >/dev/null
+            ;;
+        *)
+            echo "Server is not 8 or 9. Only 8 and 9 are supported."
+            ;;
+    esac
+}
+
+# ----------------------------------------------------------
+# Script workflow
+# ----------------------------------------------------------
+verify_rhel
+verify_rhel_version
+check_folders
+check_update
+run_update
