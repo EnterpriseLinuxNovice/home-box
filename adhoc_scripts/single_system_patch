@@ -58,6 +58,7 @@ check_folders() {
     done
 }
 
+# Throw update check output to log file
 check_update() {
     local rhel8_pre_patch_report=$ootpa_pre_patch_log/pre_patch_report_"$hostnames"_$date.log
     local rhel9_pre_patch_report=$plow_pre_patch_log/pre_patch_report_"$hostnames"_$date.log   
@@ -74,6 +75,7 @@ check_update() {
     esac
 }
 
+# Throw updates output to log file
 run_update() {
     local rhel8_post_patch_report=$ootpa_post_patch_log/post_patch_report_"$hostnames"_$date.log
     local rhel9_post_patch_report=$plow_post_patch_log/post_patch_report_"$hostnames"_$date.log    
