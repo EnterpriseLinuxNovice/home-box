@@ -1,4 +1,4 @@
-# ====== op_scripts ======
+# op_scripts 
 
 These scripts are adhoc bash scripts I have created to tackle specific issues 
 I have encounteredand is **__NOT DESIGNED TO BE IDEMPOTENT__**.
