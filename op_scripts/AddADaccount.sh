@@ -3,14 +3,14 @@
 
 cat << "EOF"
 #################################################################
-#								#
-#	This script ADD/REMOVES Active Directory accounts to	#
-#		local groups in /etc/group.			#
-#								#
-#	This scripts only assumes server is joined to REALM	#
-#		using the SSS Daemon (SSSD).			#		
-#								#
-#								#
+#																#
+#	This script ADD/REMOVES Active Directory accounts to		#
+#		local groups in /etc/group.								#
+#																#
+#	This scripts only assumes server is joined to REALM			#
+#		using the SSS Daemon (SSSD).							#		
+#																#
+#																#
 #################################################################
 EOF
 
